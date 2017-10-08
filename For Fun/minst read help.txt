@@ -1,0 +1,40 @@
+【创建 dlwin36 conda 环境】
+conda create --yes -n dlwin36 numpy scipy mkl-service m2w64-toolchain libpython jupyter
+
+【安装 Keras 2.0.5 和 Theano0.9.0 与 libgpuarray】
+conda install pygpu==0.6.2 nose
+
+【输入以下命令安装 Keras 和 Theano：】
+pip install keras==2.0.5
+
+【安装 CNTK 2.0 后端】
+pip install https://cntk.ai/PythonWheel/GPU/cntk-2.0-cp36-cp36m-win_amd64.whl
+cd D:\toolkits.win\Anaconda3\envs\dlwin36
+dir cu*.dll
+md discard & move cu*.dll discard
+
+【安装 TensorFlow-GPU 1.2.0 后端】
+pip install tensorflow-gpu==1.2.0
+
+【使用 conda 检查安装的软件包】
+(dlwin36) $ python -c "import theano; print('theano: %s, %s' % (theano.__version__, theano.__file__))"
+(dlwin36) $ python -c "import pygpu; print('pygpu: %s, %s' % (pygpu.__version__, pygpu.__file__))"
+(dlwin36) $ python -c "import tensorflow; print('tensorflow: %s, %s' % (tensorflow.__version__, tensorflow.__file__))"
+(dlwin36) $ python -c "import cntk; print('cntk: %s, %s' % (cntk.__version__, cntk.__file__))"
+
+conda remove -n dlwin36 --all
+
+
+【2】
+set KERAS_BACKEND=theano
+set THEANO_FLAGS=%THEANO_FLAGS_CPU%
+python mnist_cnn.py
+
+set KERAS_BACKEND=theano
+set THEANO_FLAGS=%THEANO_FLAGS_GPU_DNN%
+python mnist_cnn.py
+
+set KERAS_BACKEND=tensorflow
+
+set KERAS_BACKEND=cntk
+floatX=float32,device=cuda0,optimizer_including=cudnn,gpuarray.preallocate=0.8,dnn.conv.algo_bwd_filter=deterministic,dnn.conv.algo_bwd_data=deterministic,dnn.include_path=D:/toolkits.win/cuda-8.0.61/include,dnn.library_path=D:/toolkits.win/cuda-8.0.61/lib/x64
